@@ -82,11 +82,11 @@ ISR(TIMER1_COMPA_vect)
 {
     ledmodule_t *mod;
 
-    if (mode == MODE_LIGHT) {
+    //if (mode == MODE_LIGHT) {
         if ( (mod = ledmodules[submode]) != NULL && mod->isr) {
             mod->isr();
         }
-    }
+    //}
 }
 
 

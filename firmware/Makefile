@@ -16,12 +16,12 @@
 # along with this program. If not, see http://www.gnu.org/licenses/
 #
 
-#MCU = atmega168
-MCU = atmega328p
+MCU = atmega168
+#MCU = atmega328p
 F_CPU = 8000000
 
 OBJS  = main.o uart.o timers.o button.o led.o drink.o module.o
-OBJS += module_purple.o module_round.o module_rainbow.o module_rainbow2.o module_random.o
+OBJS += module_purple.o module_rainbow.o module_rainbow2.o module_random.o
 
 # Fuses
 # If you're looking for a way to fuck up your controller, here you go.

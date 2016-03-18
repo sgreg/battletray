@@ -27,6 +27,8 @@ void rgb_set(uint8_t red, uint8_t green, uint8_t blue);
 void led_on(uint8_t num);
 void led_off(uint8_t num);
 
+void leds_all_off(void);
+
 void set_gradient(uint8_t led, uint16_t count, uint8_t r, uint8_t g, uint8_t b);
 void reset_gradients(void);
 

@@ -4,18 +4,19 @@
 #include "timers.h"
 
 extern ledmodule_t ledmodule_purple;
-extern ledmodule_t ledmodule_round;
 extern ledmodule_t ledmodule_rainbow;
 extern ledmodule_t ledmodule_rainbow2;
 extern ledmodule_t ledmodule_random;
+extern ledmodule_t ledmodule_drink;
 
 
 ledmodule_t *ledmodules[] = {
     &ledmodule_purple,
-    &ledmodule_round,
     &ledmodule_rainbow,
     &ledmodule_rainbow2,
-    &ledmodule_random
+    &ledmodule_random,
+    /* drink! */
+    &ledmodule_drink
 };
 
 uint8_t ledmodule_count = sizeof(ledmodules);

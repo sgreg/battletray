@@ -51,6 +51,7 @@
 
 uint8_t mode = MODE_LIGHT;
 uint8_t submode;
+uint8_t presscount;
 
 int
 main(void)
@@ -81,7 +82,7 @@ main(void)
     uart_init(UART_BRATE_9600_8MHZ);
     sei();
 
-    uart_print("yo!\r\n\r\n");
+    uart_print("\r\nBattletray\r\n\r\n");
 
     /* default start with first ledmodule */
     ledmodule_activate(0);
@@ -89,8 +90,18 @@ main(void)
 
     while (1) {
         if (button_longpress) {
-            mode = (mode == MODE_LIGHT) ? MODE_DRINK : MODE_LIGHT;
-            submode = 0;
+            leds_all_off();
+            timer1_reset();
+            if (mode == MODE_LIGHT) {
+                mode = MODE_DRINK;
+                ledmodule_deactivate(submode);
+                submode = LIGHTMODE_DRINK;
+                drink_init();
+            } else {
+                mode = MODE_LIGHT;
+                ledmodule_deactivate(LIGHTMODE_DRINK);
+                submode = 0;
+            }
             button_longpress = 0;
             button_press = 0;
 
@@ -104,18 +115,26 @@ main(void)
                 uart_puthex(submode);
                 ledmodule_activate(submode);
             } else {
-                print_randoms();
-                you_drink();
+                //leds_all_off();
+                //print_randoms();
+                //you_drink();
+                //set_gradient(submode, 0x20, 0, 64, 0);
+                //submode++;
+                setup_drinkers(0);
+                ledmodule_activate(LIGHTMODE_DRINK);
             }
 
             button_press = 0;
 
         } else {
+            run_light();
+            /*
             if (mode == MODE_LIGHT) {
                 run_light();
             } else {
                 run_drink();
             }
+            */
         }
     }
 

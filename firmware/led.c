@@ -118,6 +118,16 @@ set_output(uint8_t led, uint8_t r, uint8_t g, uint8_t b)
 }
 
 void
+leds_all_off(void)
+{
+    uint8_t i;
+    reset_gradients();
+    for (i = 0; i < LEDS; i++) {
+        set_output(i, 0, 0, 0);
+    }
+}
+
+void
 run_light(void)
 {
     uint8_t i;

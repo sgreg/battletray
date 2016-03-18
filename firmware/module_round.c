@@ -55,14 +55,18 @@ void ledmodule_round_isr(void)
                 timer1_set_count(2000);
             case 2:
             case 4:
+            case 6:
+            case 8:
                 for (i = 0; i < LEDS; i++) {
-                    set_gradient(i, 0x80, 64, 64, 64);
+                    set_gradient(i, 0x20, 64, 0, 32);
                 }
                 break;
             case 1:
             case 3:
+            case 5:
+            case 7:
                 for (i = 0; i < LEDS; i++) {
-                    set_gradient(i, 0x80, 0, 0, 0);
+                    set_gradient(i, 0x20, 0, 0, 0);
                 }
                 break;
         }
@@ -71,9 +75,12 @@ void ledmodule_round_isr(void)
             stage = 2;
         }
     } else if (stage == 2) {
+        reset_gradients();
         for (i = 0; i < LEDS; i++) {
-            set_gradient(i, 0x80, 64, 0, 32);
+            set_output(i, 0, 0, 0);
         }
+        set_gradient(2, 0x20, 64, 0, 0);
+        set_gradient(4, 0x20, 0, 0, 64);
         stage = 3;
     } else {
         /* do nothing */
