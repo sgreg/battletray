@@ -66,6 +66,10 @@ drink_init(void)
     setup_drinkers(1);
 }
 
+
+uint8_t spin_counter;
+uint8_t blink_counter;
+
 void
 ledmodule_drink_setup(void)
 {
@@ -77,8 +81,10 @@ ledmodule_drink_setup(void)
     active = 0;
     stage = 0;
     counter = 0;
-    //timerval = 1200;
-    timerval = 600;
+    timerval = 800;
+    srand((random3 + random4) & 0xff);
+    blink_counter = ((rand() >> 5) & 0x07) + 1;
+    spin_counter = ((rand() >> 2) & 0x0f) + 1;
 }
 
 void ledmodule_drink_isr(void)
@@ -92,14 +98,14 @@ void ledmodule_drink_isr(void)
             if (timerval > 1000) {
                 timerval -= 200;
                 timer1_set_count(timerval);
-            } else if (timerval > 500) {
-                timerval -= 150;
+            } else if (timerval > 400) {
+                timerval -= 100;
                 timer1_set_count(timerval);
             } else if (timerval > 200) {
                 timerval -= 50;
                 timer1_set_count(timerval);
             } else {
-                if (++counter == 5) {
+                if (++counter == spin_counter) {
                     counter = 0;
                     stage = 1;
                 }
@@ -129,7 +135,7 @@ void ledmodule_drink_isr(void)
                 }
                 break;
         }
-        if (++counter == 5) {
+        if (++counter == blink_counter) {
             counter = 0;
             stage = 2;
         }
@@ -138,10 +144,35 @@ void ledmodule_drink_isr(void)
         for (i = 0; i < LEDS; i++) {
             set_output(i, 0, 0, 0);
         }
-        set_gradient(drinker_leds[drink_round[drinking++]], 0x20, 64, 0, 0);
-        set_gradient(drinker_leds[drink_round[drinking++]], 0x20, 0, 0, 64);
-        stage = 3;
+        set_gradient(drinker_leds[drink_round[drinking++]], 0x20, 64, 0,10);
+        set_gradient(drinker_leds[drink_round[drinking++]], 0x20, 0, 10, 64);
+        counter = rand();
+        if ((counter > 0x40 && counter < 0xa0) && drinking < 4) {
+            counter = 0;
+            stage = 3;
+        } else {
+            stage = 5;
+        }
         timer2_start();
+    } else if (stage == 3) {
+        if (++counter == 10) {
+            set_gradient(drinker_leds[drink_round[drinking++]], 10, 64, 0,10);
+            set_gradient(drinker_leds[drink_round[drinking++]], 10, 0, 10, 64);
+
+            counter = rand();
+            if ((counter > 0x80 || counter < 0x30) && drinking < 4) {
+                counter = 0;
+                stage = 4;
+            } else {
+                stage = 5;
+            }
+        }
+    } else if (stage == 4) {
+        if (++counter == 10) {
+            set_gradient(drinker_leds[drink_round[drinking++]], 10, 64, 0,10);
+            set_gradient(drinker_leds[drink_round[drinking++]], 10, 0, 10, 64);
+            stage = 5;
+        }
     } else {
         /* do nothing */
     }
