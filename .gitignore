@@ -4,3 +4,5 @@ firmware/**/*.lst
 firmware/**/*.map
 firmware/**/*.elf
 firmware/**/*.hex
+hardware/**/*-cache.lib
+hardware/**/*.bak
